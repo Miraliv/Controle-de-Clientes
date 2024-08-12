@@ -46,6 +46,12 @@ public class ApiarioController {
         return apiarioService.salvarCliente(cliente);
     }
 
+    @PutMapping("/clientes/{id}")
+    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente clienteDetails) {
+        Cliente clienteAtualizado = apiarioService.atualizarCliente(id, clienteDetails);
+        return ResponseEntity.ok(clienteAtualizado);
+    }
+
     @DeleteMapping("/clientes/{id}")
     public void deletarCliente(@PathVariable Long id) {
         apiarioService.deletarCliente(id);

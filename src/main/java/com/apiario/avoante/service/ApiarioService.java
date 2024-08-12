@@ -1,5 +1,6 @@
 package com.apiario.avoante.service;
 
+import com.apiario.avoante.exception.ResourceNotFoundException;
 import com.apiario.avoante.model.Cliente;
 import com.apiario.avoante.model.Colheita;
 import com.apiario.avoante.repository.ClienteRepository;
@@ -37,6 +38,20 @@ public class ApiarioService {
         return clienteRepository.findAll().stream()
                 .filter(cliente -> cliente.getColheita().getId().equals(colheitaId))
                 .toList();
+    }
+
+    public Cliente atualizarCliente(Long id, Cliente clienteDetails) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o id: " + id));
+
+        cliente.setNome(clienteDetails.getNome());
+        cliente.setTelefone(clienteDetails.getTelefone());
+        cliente.setSituacao(clienteDetails.getSituacao());
+        cliente.setGarrafasMel(clienteDetails.getGarrafasMel());
+        cliente.setPotesFavo(clienteDetails.getPotesFavo());
+        cliente.setColheita(clienteDetails.getColheita());
+
+        return clienteRepository.save(cliente);
     }
 
     public Cliente salvarCliente(Cliente cliente) {
