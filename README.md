@@ -6,13 +6,13 @@
 
 - HTML5
 - CSS3
-- Bootstrap 4
-- JavaScript (ES6+)
+- Bootstrap
+- JavaScript
 - jQuery
 
 ## Time de Desenvolvedores
 
-- [Seu Nome]
+- Kauã Vilarim
 
 ## Objetivo do Software
 
@@ -21,7 +21,7 @@ O sistema tem como objetivo facilitar a gestão de clientes para um apiário. O 
 ## Funcionalidades do Sistema
 
 1. **Gerenciamento de Colheitas**:
-   - Adicionar novas colheitas com informações sobre a quantidade de garrafas de mel e potes de favo.
+   - Adicionar novas colheitas com informações sobre a quantidade de garrafas de mel e potes de favo retirados.
    - Listar colheitas disponíveis.
    - Selecionar colheitas para visualizar e gerenciar os clientes associados.
 
