@@ -1,5 +1,6 @@
 package com.apiario.avoante.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,5 +19,6 @@ public class Cliente {
 
     @ManyToOne
     @JoinColumn(name = "colheita_id")
+    @JsonBackReference
     private Colheita colheita;
 }
