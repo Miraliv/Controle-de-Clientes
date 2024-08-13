@@ -4,6 +4,8 @@
 
 ## Tecnologias Utilizadas
 
+- Java
+- MySQL
 - HTML5
 - CSS3
 - Bootstrap
