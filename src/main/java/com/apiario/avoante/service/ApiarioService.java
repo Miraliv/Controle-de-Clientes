@@ -5,6 +5,7 @@ import com.apiario.avoante.model.Cliente;
 import com.apiario.avoante.model.Colheita;
 import com.apiario.avoante.repository.ClienteRepository;
 import com.apiario.avoante.repository.ColheitaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,18 +41,24 @@ public class ApiarioService {
                 .toList();
     }
 
-    public Cliente atualizarCliente(Long id, Cliente clienteDetails) {
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com o id: " + id));
+    public Cliente atualizarCliente(Long clienteId, Cliente novoCliente) {
+        // Carrega o cliente existente do banco de dados
+        Cliente clienteExistente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
-        cliente.setNome(clienteDetails.getNome());
-        cliente.setTelefone(clienteDetails.getTelefone());
-        cliente.setSituacao(clienteDetails.getSituacao());
-        cliente.setGarrafasMel(clienteDetails.getGarrafasMel());
-        cliente.setPotesFavo(clienteDetails.getPotesFavo());
-        cliente.setColheita(clienteDetails.getColheita());
+        // Atualiza apenas os campos necessários
+        clienteExistente.setNome(novoCliente.getNome());
+        clienteExistente.setSituacao(novoCliente.getSituacao());
 
-        return clienteRepository.save(cliente);
+        // Colheita não deve ser modificada, então mantemos a existente
+        if (novoCliente.getColheita() != null) {
+            Colheita colheita = colheitaRepository.findById(novoCliente.getColheita().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Colheita não encontrada"));
+            clienteExistente.setColheita(colheita);
+        }
+
+        // Salva o cliente atualizado no banco de dados
+        return clienteRepository.save(clienteExistente);
     }
 
     public Cliente salvarCliente(Cliente cliente) {
