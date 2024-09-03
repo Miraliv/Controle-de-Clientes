@@ -101,7 +101,7 @@ function updateCustomerTable() {
             <td>${cliente.potesFavo}</td>
             <td>
                 <button class="btn btn-sm btn-primary" onclick="editCustomer(${index})">Editar</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${cliente.id})">Excluir</button>
+                <button class="btn btn-sm btn-danger" onclick="showDeleteConfirmation(${cliente.id})">Excluir</button>
             </td>
         `);
         tbody.append(tr);
@@ -216,6 +216,17 @@ function updateCustomer(event) {
             console.error('Erro ao atualizar cliente:', error);
         });
 }
+
+function showDeleteConfirmation(clienteId) {
+    $('#confirmDeleteModal').modal('show');
+
+    // Adiciona um evento de clique ao botão de confirmação do modal
+    $('#confirmDeleteButton').off('click').on('click', function () {
+        deleteCustomer(clienteId);
+        $('#confirmDeleteModal').modal('hide');
+    });
+}
+
 
 // Exclui um cliente através de uma solicitação DELETE
 function deleteCustomer(id) {
