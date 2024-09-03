@@ -153,8 +153,8 @@ function addCustomer(event) {
     const nome = $('#customerName').val();
     const telefone = $('#customerPhone').val();
     const situacao = $('#customerSituacao').val();
-    const garrafasMel = parseInt($('#customerHoneyJars').val());
-    const potesFavo = parseInt($('#customerHoneycombs').val());
+    let garrafasMel = parseInt($('#customerHoneyJars').val());
+    let potesFavo = parseInt($('#customerHoneycombs').val());
 
     // Verifica se o telefone está completamente preenchido
         if (telefone.replace(/[_\s()-]/g, '').length !== 11) {
@@ -162,12 +162,17 @@ function addCustomer(event) {
             return;
         }
 
-    const selectedHarvest = colheitas.find(colheita => colheita.nome === $('#harvestNameTitle').text());
+        // Definir valores vazios como 0
+            if (isNaN(garrafasMel)) garrafasMel = 0;
+            if (isNaN(potesFavo)) potesFavo = 0;
 
-    if (!selectedHarvest) {
-        alert('Selecione uma colheita para adicionar um cliente.');
-        return;
-    }
+            // Verificar se ambos os valores são 0
+            if (garrafasMel === 0 && potesFavo === 0) {
+                alert('Você deve comprar pelo menos uma garrafa de mel ou um pote de favo.');
+                return;
+            }
+
+    const selectedHarvest = colheitas.find(colheita => colheita.nome === $('#harvestNameTitle').text());
 
     axios.post('/api/clientes', { nome, telefone, situacao, garrafasMel, potesFavo, colheita: { id: selectedHarvest.id } })
         .then(response => {
