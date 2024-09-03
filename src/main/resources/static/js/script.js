@@ -156,6 +156,12 @@ function addCustomer(event) {
     const garrafasMel = parseInt($('#customerHoneyJars').val());
     const potesFavo = parseInt($('#customerHoneycombs').val());
 
+    // Verifica se o telefone está completamente preenchido
+        if (telefone.replace(/[_\s()-]/g, '').length !== 11) {
+            alert('Por favor, preencha o telefone corretamente.');
+            return;
+        }
+
     const selectedHarvest = colheitas.find(colheita => colheita.nome === $('#harvestNameTitle').text());
 
     if (!selectedHarvest) {
@@ -175,6 +181,11 @@ function addCustomer(event) {
             console.error('Erro ao adicionar cliente:', error);
         });
 }
+//Para mascarar o input de telefone
+$(document).ready(function(){
+    $('#customerPhone').inputmask('(99) 99999-9999');
+    $('#updateCustomerPhone').inputmask('(99) 99999-9999');
+});
 
 // Prepara o formulário de atualização de cliente com os dados existentes
 function editCustomer(index) {
@@ -198,6 +209,12 @@ function updateCustomer(event) {
     const situacao = $('#updateCustomerSituacao').val();
     const garrafasMel = parseInt($('#updateCustomerHoneyJars').val());
     const potesFavo = parseInt($('#updateCustomerHoneycombs').val());
+
+    // Verifica se o telefone está completamente preenchido
+            if (telefone.replace(/[_\s()-]/g, '').length !== 11) {
+                alert('Por favor, preencha o telefone corretamente.');
+                return;
+            }
 
     const cliente = clientesFiltrados[index];
     cliente.nome = nome;
