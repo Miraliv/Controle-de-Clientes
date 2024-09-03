@@ -41,18 +41,20 @@ public class ApiarioService {
                 .toList();
     }
 
-    public Cliente atualizarCliente(Long clienteId, Cliente novoCliente) {
+    public Cliente atualizarCliente(Long clienteId, Cliente attCliente) {
         // Carrega o cliente existente do banco de dados
         Cliente clienteExistente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
-        // Atualiza apenas os campos necessários
-        clienteExistente.setNome(novoCliente.getNome());
-        clienteExistente.setSituacao(novoCliente.getSituacao());
-
+        // Atualiza os campos relacionados ao cliente
+        clienteExistente.setNome(attCliente.getNome());
+        clienteExistente.setTelefone(attCliente.getTelefone());
+        clienteExistente.setSituacao(attCliente.getSituacao());
+        clienteExistente.setGarrafasMel(attCliente.getGarrafasMel());
+        clienteExistente.setPotesFavo(attCliente.getPotesFavo());
         // Colheita não deve ser modificada, então mantemos a existente
-        if (novoCliente.getColheita() != null) {
-            Colheita colheita = colheitaRepository.findById(novoCliente.getColheita().getId())
+        if (attCliente.getColheita() != null) {
+            Colheita colheita = colheitaRepository.findById(attCliente.getColheita().getId())
                     .orElseThrow(() -> new EntityNotFoundException("Colheita não encontrada"));
             clienteExistente.setColheita(colheita);
         }

@@ -216,7 +216,7 @@ function updateCustomer(event) {
             console.error('Erro ao atualizar cliente:', error);
         });
 }
-
+//Mostra o modal de delete
 function showDeleteConfirmation(clienteId) {
     $('#confirmDeleteModal').modal('show');
 
