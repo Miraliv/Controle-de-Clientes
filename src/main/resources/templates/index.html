@@ -37,6 +37,11 @@
         <button type="button" class="btn btn-danger btn-sm d-inline-block ms-2" data-toggle="modal" data-target="#confirmDeleteHarvestModal">
             <i class="bi bi-trash"></i>
         </button>
+
+        <button type="button" class="btn btn-primary btn-sm d-inline-block ms-2" data-toggle="modal" data-target="">
+            <i class="bi bi-pen"></i>
+        </button>
+
     </div>
 
     <!-- Segunda seção: Adicionar Cliente e Filtrar Clientes -->
@@ -63,170 +68,21 @@
 <div id="tablesContent" class="mt-4"></div>
 
 <!-- Modal de adicionar colheita -->
-<div class="modal fade" id="addHarvestModal" tabindex="-1" aria-labelledby="addHarvestModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="addHarvestForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addHarvestModalLabel">Adicionar Nova Colheita</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="harvestName">Nome da Colheita</label>
-                    <input type="text" class="form-control" id="harvestName" required>
-                </div>
-                <div class="form-group">
-                    <label for="harvestHoneyJars">Total de Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="harvestHoneyJars" required>
-                </div>
-                <div class="form-group">
-                    <label for="harvestHoneycombs">Total de Potes de Favo</label>
-                    <input type="number" class="form-control" id="harvestHoneycombs" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar Colheita</button>
-            </div>
-        </form>
-    </div>
-</div>
+<div th:replace="modal_add_harvest :: modal"></div>
 
 <!-- Modal de adicionar cliente -->
-<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="addCustomerForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCustomerModalLabel">Adicionar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="customerName">Nome do Cliente</label>
-                    <input type="text" class="form-control" id="customerName" required>
-                </div>
-                <div class="form-group">
-                    <label for="customerPhone">Telefone</label>
-                    <input type="text" class="form-control" id="customerPhone" required>
-                </div>
-                <div class="form-group">
-                    <label for="customerSituacao">Situação</label>
-                    <select class="form-control" id="customerSituacao" required>
-                        <option value="Quer comprar">Quer comprar</option>
-                        <option value="Já pagou">Já pagou</option>
-                        <option value="Falta pagar">Falta pagar</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="customerHoneyJars">Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="customerHoneyJars">
-                </div>
-                <div class="form-group">
-                    <label for="customerHoneycombs">Potes de Favo</label>
-                    <input type="number" class="form-control" id="customerHoneycombs">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-success">Adicionar Cliente</button>
-            </div>
-        </form>
-    </div>
-</div>
+<div th:replace="modal_add_Customer :: modal"></div>
 
 <!-- Modal de editar cliente -->
-<div class="modal fade" id="updateCustomerModal" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="updateCustomerForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateCustomerModalLabel">Atualizar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="updateCustomerIndex">
-                <div class="form-group">
-                    <label for="updateCustomerName">Nome do Cliente</label>
-                    <input type="text" class="form-control" id="updateCustomerName" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerPhone">Telefone</label>
-                    <input type="text" class="form-control" id="updateCustomerPhone" placeholder="(xx) xxxxx-xxxx" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerSituacao">Situação</label>
-                    <select class="form-control" id="updateCustomerSituacao" required>
-                        <option value="Quer comprar">Quer comprar</option>
-                        <option value="Já pagou">Já pagou</option>
-                        <option value="Falta pagar">Falta pagar</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerHoneyJars">Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="updateCustomerHoneyJars" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerHoneycombs">Potes de Favo</label>
-                    <input type="number" class="form-control" id="updateCustomerHoneycombs" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            </div>
-        </form>
-    </div>
-</div>
+<div th:replace="modal_update_Customer :: modal"></div>
 
 <!-- Modal exclusão de colheita -->
-<div class="modal fade" id="confirmDeleteHarvestModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Tem certeza que deseja excluir esta colheita?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Excluir</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="modal_delete_harvest :: modal"></div>
 
 <!-- Modal de exclusão de cliente-->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteLabel">
-                    <i class="fas fa-exclamation-triangle text-danger"></i> Confirmar Exclusão
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Tem certeza que deseja excluir este cliente?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="modal_delete_Customer :: modal"></div>
 
+<!-- Dependências  -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
 <script th:src="@{/js/script.js}"></script>

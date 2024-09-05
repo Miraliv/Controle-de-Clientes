@@ -1,0 +1,33 @@
+<!-- modal_add_harvest.html -->
+<div th:fragment="modal" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal fade" id="addHarvestModal" tabindex="-1" aria-labelledby="addHarvestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addHarvestForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addHarvestModalLabel">Adicionar Nova Colheita</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="harvestName">Nome da Colheita</label>
+                        <input type="text" class="form-control" id="harvestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="harvestHoneyJars">Total de Garrafas de Mel</label>
+                        <input type="number" class="form-control" id="harvestHoneyJars" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="harvestHoneycombs">Total de Potes de Favo</label>
+                        <input type="number" class="form-control" id="harvestHoneycombs" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Colheita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

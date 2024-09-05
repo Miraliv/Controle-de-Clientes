@@ -1,0 +1,45 @@
+<div th:fragment="modal" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal fade" id="updateCustomerModal" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="updateCustomerForm" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateCustomerModalLabel">Atualizar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="updateCustomerIndex">
+                    <div class="form-group">
+                        <label for="updateCustomerName">Nome do Cliente</label>
+                        <input type="text" class="form-control" id="updateCustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCustomerPhone">Telefone</label>
+                        <input type="text" class="form-control" id="updateCustomerPhone" placeholder="(xx) xxxxx-xxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCustomerSituacao">Situação</label>
+                        <select class="form-control" id="updateCustomerSituacao" required>
+                            <option value="Quer comprar">Quer comprar</option>
+                            <option value="Já pagou">Já pagou</option>
+                            <option value="Falta pagar">Falta pagar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCustomerHoneyJars">Garrafas de Mel</label>
+                        <input type="number" class="form-control" id="updateCustomerHoneyJars" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCustomerHoneycombs">Potes de Favo</label>
+                        <input type="number" class="form-control" id="updateCustomerHoneycombs" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
