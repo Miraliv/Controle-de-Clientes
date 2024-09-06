@@ -4,6 +4,7 @@ import com.apiario.avoante.model.Cliente;
 import com.apiario.avoante.model.Colheita;
 import com.apiario.avoante.service.ApiarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,5 +111,15 @@ public class ApiarioController {
     @DeleteMapping("/clientes/{id}")
     public void deletarCliente(@PathVariable Long id) {
         apiarioService.deletarCliente(id);
+    }
+
+    @DeleteMapping("/colheitas/{id}")
+    public ResponseEntity<Void> deletarColheita(@PathVariable Long id) {
+        try {
+            apiarioService.deletarColheita(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

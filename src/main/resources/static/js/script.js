@@ -2,7 +2,7 @@
 let colheitas = [];
 let clientes = [];
 let clientesFiltrados = [];
-
+let selectedHarvest = null;
 // Carrega todas as colheitas ao iniciar a aplicação
 function loadHarvests() {
     axios.get('/api/colheitas')
@@ -34,6 +34,8 @@ function updateHarvestDropdown() {
 
 // Exibe os detalhes da colheita selecionada e carrega os clientes associados
 function selectHarvest(colheita) {
+    selectedHarvest = colheita;  // Armazena a colheita selecionada
+
     $('#harvestNameTitle').text(colheita.nome);
     $('#addCustomerButton').prop('disabled', false);
 
@@ -45,6 +47,7 @@ function selectHarvest(colheita) {
         <p>Potes de Favo: ${colheita.totalPotesFavo}</p>
     `);
 }
+
 
 // Carrega os clientes associados à colheita selecionada
 function loadCustomers(harvestId) {
@@ -261,6 +264,29 @@ function deleteCustomer(id) {
         .catch(error => {
             console.error('Erro ao excluir cliente:', error);
         });
+}
+
+function deleteSelectedHarvest() {
+    if (selectedHarvest) {
+        axios.delete(`/api/colheitas/${selectedHarvest.id}`)
+            .then(response => {
+                console.log('Colheita excluída com sucesso:', response);
+                $('#confirmDeleteHarvestModal').modal('hide'); // Fecha o modal
+                loadHarvests(); // Recarrega as colheitas após a exclusão
+                redirectToHome()
+            })
+            .catch(error => {
+                console.error('Erro ao excluir a colheita:', error);
+            });
+    }
+}
+$(document).ready(function() {
+    $('#confirmDeleteHarvestModal .btn-danger').on('click', deleteSelectedHarvest);
+});
+
+function redirectToHome() {
+    // Recarrega a página inteira
+    location.reload();
 }
 
 // Event Listeners

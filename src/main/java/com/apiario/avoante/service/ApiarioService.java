@@ -70,4 +70,8 @@ public class ApiarioService {
     public void deletarCliente(Long id) {
         clienteRepository.deleteById(id);
     }
+
+    public void deletarColheita(Long id) {
+        colheitaRepository.deleteById(id);
+    }
 }
