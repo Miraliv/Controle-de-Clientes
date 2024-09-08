@@ -43,6 +43,7 @@ function selectHarvest(colheita) {
 
     $('#harvestData').html(`
         <h5>Detalhes da Colheita</h5>
+        <p>Baldes de mel: ${colheita.baldesMel}</p>
         <p>Garrafas de Mel: ${colheita.totalGarrafasMel}</p>
         <p>Potes de Favo: ${colheita.totalPotesFavo}</p>
     `);
@@ -134,10 +135,11 @@ function addHarvest(event) {
     event.preventDefault();
 
     const nome = $('#harvestName').val();
+    const baldesMel = parseInt($('#harvestHoneyBucket').val());
     const totalGarrafasMel = parseInt($('#harvestHoneyJars').val());
     const totalPotesFavo = parseInt($('#harvestHoneycombs').val());
 
-    axios.post('/api/colheitas', { nome, totalGarrafasMel, totalPotesFavo })
+    axios.post('/api/colheitas', { nome, baldesMel, totalGarrafasMel, totalPotesFavo })
         .then(response => {
             colheitas.push(response.data);
             updateHarvestDropdown();

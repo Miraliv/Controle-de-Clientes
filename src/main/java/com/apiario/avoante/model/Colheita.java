@@ -15,6 +15,7 @@ public class Colheita {
     private Long id;
 
     private String nome;
+    private int baldesMel;
     private int totalGarrafasMel;
     private int totalPotesFavo;
 
