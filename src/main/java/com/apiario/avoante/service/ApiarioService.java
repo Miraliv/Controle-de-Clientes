@@ -74,4 +74,21 @@ public class ApiarioService {
     public void deletarColheita(Long id) {
         colheitaRepository.deleteById(id);
     }
+
+    public Optional<Colheita> atualizarColheita(Long id, Colheita colheitaAtualizada) {
+        Optional<Colheita> colheitaExistente = colheitaRepository.findById(id);
+
+        if (colheitaExistente.isPresent()) {
+            Colheita colheita = colheitaExistente.get();
+            colheita.setNome(colheitaAtualizada.getNome());
+            colheita.setBaldesMel(colheitaAtualizada.getBaldesMel());
+            colheita.setTotalGarrafasMel(colheitaAtualizada.getTotalGarrafasMel());
+            colheita.setTotalPotesFavo(colheitaAtualizada.getTotalPotesFavo());
+
+            // Salva a colheita atualizada no banco de dados
+            colheitaRepository.save(colheita);
+            return Optional.of(colheita);
+        }
+        return Optional.empty();
+    }
 }

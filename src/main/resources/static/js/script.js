@@ -215,7 +215,11 @@ function editHarvest() {
         return;
     }
 
-    console.log("Colheita selecionada para edição: ", selectedHarvest);
+    // Verifique se o jQuery está encontrando os campos
+    console.log($('#harvestName')); // Verifica se o elemento está sendo selecionado corretamente
+    console.log($('#harvestHoneyBucket'));
+    console.log($('#harvestHoneyJars'));
+    console.log($('#harvestHoneycombs'));
 
     // Preenche os campos do modal com os dados da colheita selecionada
     $('#harvestName').val(selectedHarvest.nome || '');
@@ -223,16 +227,16 @@ function editHarvest() {
     $('#harvestHoneyJars').val(selectedHarvest.totalGarrafasMel !== undefined ? selectedHarvest.totalGarrafasMel : '');
     $('#harvestHoneycombs').val(selectedHarvest.totalPotesFavo !== undefined ? selectedHarvest.totalPotesFavo : '');
 
-    // Agora, abre o modal após os dados estarem prontos
+    // Abre o modal após os dados estarem prontos
     $('#updateHarvestModal').modal('show');
 }
+
 
 $('#updateHarvestForm').on('submit', function(event) {
     event.preventDefault(); // Impede o comportamento padrão de submissão do formulário
 
     updateHarvest(); // Chama a função que faz o envio via Axios
 });
-
 
 function updateHarvest() {
     const nome = $('#harvestName').val();
