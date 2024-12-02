@@ -1,6 +1,5 @@
 package com.apiario.avoante.service;
 
-import com.apiario.avoante.exception.ResourceNotFoundException;
 import com.apiario.avoante.model.Cliente;
 import com.apiario.avoante.model.Colheita;
 import com.apiario.avoante.repository.ClienteRepository;
