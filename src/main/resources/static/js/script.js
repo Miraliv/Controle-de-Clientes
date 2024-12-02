@@ -1,232 +1,169 @@
 // Inicialização de variáveis globais
-    let colheitas = [];
-    let clientes = [];
-    let clientesFiltrados = [];
+let colheitas = [];
+let selectedHarvest = null;
+// Carrega todas as colheitas ao iniciar a aplicação
+function loadHarvests() {
+    axios.get('/api/colheitas')
+        .then(response => {
+            colheitas = Array.isArray(response.data) ? response.data : [];
+            updateHarvestDropdown();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar colheitas:', error);
+        });
+}
 
-    function loadHarvests() {
-        axios.get('/api/colheitas')
-            .then(response => {
-                colheitas = Array.isArray(response.data) ? response.data : [];
-                updateHarvestDropdown();
-            })
-            .catch(error => {
-                console.error('Erro ao carregar colheitas:', error);
-            });
-    }
+// Atualiza o dropdown das colheitas com os dados carregados
+function updateHarvestDropdown() {
+    const harvestDropdownMenu = $('#harvestDropdownMenu');
+    harvestDropdownMenu.empty(); // Limpa o dropdown antes de adicionar novos itens
 
-    function updateHarvestDropdown() {
-        const harvestDropdownMenu = document.getElementById('harvestDropdownMenu');
-        harvestDropdownMenu.innerHTML = '';
-
-        colheitas.forEach((colheita, index) => {
-            const dropdownItem = document.createElement('a');
-            dropdownItem.className = 'dropdown-item';
-            dropdownItem.href = '#';
-            dropdownItem.textContent = colheita.nome;
-            dropdownItem.onclick = () => {
+    colheitas.forEach((colheita, index) => {
+        const dropdownItem = $('<a>')
+            .addClass('dropdown-item')
+            .attr('href', '#')
+            .text(colheita.nome)
+            .on('click', () => {
                 selectHarvest(colheita);
-            };
-            harvestDropdownMenu.appendChild(dropdownItem);
+            });
+        harvestDropdownMenu.append(dropdownItem);
+    });
+}
+
+// Exibe os detalhes da colheita selecionada e carrega os clientes associados
+function selectHarvest(colheita) {
+    selectedHarvest = colheita;  // Armazena a colheita selecionada
+
+    $('#harvestNameTitle').text(colheita.nome);
+    $('#addCustomerButton').prop('disabled', false);
+
+    loadCustomers(colheita.id);
+
+    $('#harvestData').html(`
+        <h5>Detalhes da Colheita</h5>
+        <p>Baldes de mel: ${colheita.baldesMel}</p>
+        <p>Garrafas de Mel: ${colheita.totalGarrafasMel}</p>
+        <p>Potes de Favo: ${colheita.totalPotesFavo}</p>
+    `);
+}
+
+
+// Adiciona uma nova colheita através de uma solicitação POST
+function addHarvest(event) {
+    event.preventDefault();
+
+    const nome = $('#harvestName').val();
+    const baldesMel = parseInt($('#harvestHoneyBucket').val());
+    const totalGarrafasMel = parseInt($('#harvestHoneyJars').val());
+    const totalPotesFavo = parseInt($('#harvestHoneycombs').val());
+
+    axios.post('/api/colheitas', { nome, baldesMel, totalGarrafasMel, totalPotesFavo })
+        .then(response => {
+            colheitas.push(response.data);
+            updateHarvestDropdown();
+            $('#addHarvestForm').trigger('reset');
+            $('#addHarvestModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Erro ao adicionar colheita:', error);
         });
+}
+
+
+//Para mascarar o input de telefone
+$(document).ready(function(){
+    $('#customerPhone').inputmask('(99) 99999-9999');
+    $('#updateCustomerPhone').inputmask('(99) 99999-9999');
+});
+
+
+function editHarvest() {
+    if (!selectedHarvest) {
+        console.error("Nenhuma colheita foi selecionada para edição.");
+        return;
     }
 
-    function selectHarvest(colheita) {
-        document.getElementById('harvestNameTitle').textContent = colheita.nome;
-        document.getElementById('addCustomerButton').disabled = false;
+    // Verifique se o jQuery está encontrando os campos
+    console.log($('#harvestName')); // Verifica se o elemento está sendo selecionado corretamente
+    console.log($('#harvestHoneyBucket'));
+    console.log($('#harvestHoneyJars'));
+    console.log($('#harvestHoneycombs'));
 
-        loadCustomers(colheita.id);
+    // Preenche os campos do modal com os dados da colheita selecionada
+    $('#harvestName').val(selectedHarvest.nome || '');
+    $('#harvestHoneyBucket').val(selectedHarvest.baldesMel !== undefined ? selectedHarvest.baldesMel : '');
+    $('#harvestHoneyJars').val(selectedHarvest.totalGarrafasMel !== undefined ? selectedHarvest.totalGarrafasMel : '');
+    $('#harvestHoneycombs').val(selectedHarvest.totalPotesFavo !== undefined ? selectedHarvest.totalPotesFavo : '');
 
-        const harvestData = document.getElementById('harvestData');
-        harvestData.innerHTML = `
-            <h5>Detalhes da Colheita</h5>
-            <p>Garrafas de Mel: ${colheita.totalGarrafasMel}</p>
-            <p>Potes de Favo: ${colheita.totalPotesFavo}</p>
-        `;
+    // Abre o modal após os dados estarem prontos
+    $('#updateHarvestModal').modal('show');
+}
+
+
+$('#updateHarvestForm').on('submit', function(event) {
+    event.preventDefault(); // Impede o comportamento padrão de submissão do formulário
+
+    updateHarvest(); // Chama a função que faz o envio via Axios
+});
+
+function updateHarvest() {
+    const nome = $('#harvestName').val();
+    const baldesMel = parseInt($('#harvestHoneyBucket').val());
+    const totalGarrafasMel = parseInt($('#harvestHoneyJars').val());
+    const totalPotesFavo = parseInt($('#harvestHoneycombs').val());
+
+    if (!selectedHarvest) {
+        console.error("Nenhuma colheita selecionada para atualização.");
+        return;
     }
 
-    function loadCustomers(harvestId) {
-        axios.get(`/api/colheitas/${harvestId}/clientes`)
-            .then(response => {
-                clientes = Array.isArray(response.data) ? response.data : [];
-                clientesFiltrados = clientes; // Inicialmente, todos os clientes são exibidos
-                updateCustomerTable();
-            })
-            .catch(error => {
-                console.error('Erro ao carregar clientes:', error);
-            });
-    }
+    selectedHarvest.nome = nome;
+    selectedHarvest.baldesMel = baldesMel;
+    selectedHarvest.totalGarrafasMel = totalGarrafasMel;
+    selectedHarvest.totalPotesFavo = totalPotesFavo;
 
-    function filterCustomers(situacao) {
-        if (situacao === 'Todos') {
-            clientesFiltrados = clientes;
-        } else {
-            clientesFiltrados = clientes.filter(cliente => cliente.situacao === situacao);
-        }
-        updateCustomerTable();
-    }
+    axios.put(`/api/colheitas/${selectedHarvest.id}`, selectedHarvest)
+        .then(response => {
+            // Atualize os dados da colheita
+            selectedHarvest = response.data;
 
-    function updateCustomerTable() {
-        const tablesContent = document.getElementById('tablesContent');
-        tablesContent.innerHTML = '';
+            // Atualize os detalhes na tela
+            $('#harvestNameTitle').text(selectedHarvest.nome);
+            $('#updateHarvestModal').modal('hide');
 
-        if (clientesFiltrados.length === 0) {
-            tablesContent.innerHTML = '<p>Nenhum cliente encontrado.</p>';
-            return;
-        }
-
-        const table = document.createElement('table');
-        table.className = 'table table-striped';
-
-        const thead = document.createElement('thead');
-        thead.innerHTML = `
-            <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Situação</th>
-                <th>Garrafas de Mel</th>
-                <th>Potes de Favo</th>
-                <th>Ações</th>
-            </tr>
-        `;
-
-        const tbody = document.createElement('tbody');
-        clientesFiltrados.forEach((cliente, index) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${cliente.nome}</td>
-                <td>${cliente.telefone}</td>
-                <td class="${getSituacaoClass(cliente.situacao)}">${cliente.situacao}</td>
-                <td>${cliente.garrafasMel}</td>
-                <td>${cliente.potesFavo}</td>
-                <td>
-                    <button class="btn btn-sm btn-primary" onclick="editCustomer(${index})">Editar</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${cliente.id})">Excluir</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
+            // Você pode atualizar a interface ou recarregar a lista de colheitas aqui
+        })
+        .catch(error => {
+            console.error("Erro ao atualizar colheita:", error);
         });
+}
 
-        table.appendChild(thead);
-        table.appendChild(tbody);
-        tablesContent.appendChild(table);
-    }
 
-    function getSituacaoClass(situacao) {
-        switch (situacao) {
-            case 'Quer comprar':
-                return 'situacao-warning';
-            case 'Já pagou':
-                return 'situacao-success';
-            case 'Falta pagar':
-                return 'situacao-danger';
-            default:
-                return '';
-        }
-    }
-
-    function addHarvest(event) {
-        event.preventDefault();
-
-        const nome = document.getElementById('harvestName').value;
-        const totalGarrafasMel = parseInt(document.getElementById('harvestHoneyJars').value);
-        const totalPotesFavo = parseInt(document.getElementById('harvestHoneycombs').value);
-
-        axios.post('/api/colheitas', { nome, totalGarrafasMel, totalPotesFavo })
+function deleteSelectedHarvest() {
+    if (selectedHarvest) {
+        axios.delete(`/api/colheitas/${selectedHarvest.id}`)
             .then(response => {
-                colheitas.push(response.data);
-                updateHarvestDropdown();
-                document.getElementById('addHarvestForm').reset();
-                $('#addHarvestModal').modal('hide');
+                console.log('Colheita excluída com sucesso:', response);
+                $('#confirmDeleteHarvestModal').modal('hide'); // Fecha o modal
+                loadHarvests(); // Recarrega as colheitas após a exclusão
+                redirectToHome()
             })
             .catch(error => {
-                console.error('Erro ao adicionar colheita:', error);
+                console.error('Erro ao excluir a colheita:', error);
             });
     }
+}
+$(document).ready(function() {
+    $('#confirmDeleteHarvestModal .btn-danger').on('click', deleteSelectedHarvest);
+});
 
-    function addCustomer(event) {
-        event.preventDefault();
+function redirectToHome() {
+    // Recarrega a página inteira
+    location.reload();
+}
 
-        const nome = document.getElementById('customerName').value;
-        const telefone = document.getElementById('customerPhone').value;
-        const situacao = document.getElementById('customerSituacao').value;
-        const garrafasMel = parseInt(document.getElementById('customerHoneyJars').value);
-        const potesFavo = parseInt(document.getElementById('customerHoneycombs').value);
+// Event Listeners
+$('#addHarvestForm').on('submit', addHarvest);
 
-        const selectedHarvest = colheitas.find(colheita => colheita.nome === document.getElementById('harvestNameTitle').textContent);
-
-        if (!selectedHarvest) {
-            alert('Selecione uma colheita para adicionar um cliente.');
-            return;
-        }
-
-        axios.post('/api/clientes', { nome, telefone, situacao, garrafasMel, potesFavo, colheita: { id: selectedHarvest.id } })
-            .then(response => {
-                clientes.push(response.data);
-                clientesFiltrados = clientes;
-                updateCustomerTable();
-                document.getElementById('addCustomerForm').reset();
-                $('#addCustomerModal').modal('hide');
-            })
-            .catch(error => {
-                console.error('Erro ao adicionar cliente:', error);
-            });
-    }
-
-    function editCustomer(index) {
-        const cliente = clientesFiltrados[index];
-        document.getElementById('updateCustomerIndex').value = index;
-        document.getElementById('updateCustomerName').value = cliente.nome;
-        document.getElementById('updateCustomerPhone').value = cliente.telefone;
-        document.getElementById('updateCustomerSituacao').value = cliente.situacao;
-        document.getElementById('updateCustomerHoneyJars').value = cliente.garrafasMel;
-        document.getElementById('updateCustomerHoneycombs').value = cliente.potesFavo;
-        $('#updateCustomerModal').modal('show');
-    }
-
-    function updateCustomer(event) {
-        event.preventDefault();
-
-        const index = document.getElementById('updateCustomerIndex').value;
-        const nome = document.getElementById('updateCustomerName').value;
-        const telefone = document.getElementById('updateCustomerPhone').value;
-        const situacao = document.getElementById('updateCustomerSituacao').value;
-        const garrafasMel = parseInt(document.getElementById('updateCustomerHoneyJars').value);
-        const potesFavo = parseInt(document.getElementById('updateCustomerHoneycombs').value);
-
-        const cliente = clientesFiltrados[index];
-        cliente.nome = nome;
-        cliente.telefone = telefone;
-        cliente.situacao = situacao;
-        cliente.garrafasMel = garrafasMel;
-        cliente.potesFavo = potesFavo;
-
-        axios.put(`/api/clientes/${cliente.id}`, cliente)
-            .then(response => {
-                clientesFiltrados[index] = response.data;
-                updateCustomerTable();
-                $('#updateCustomerModal').modal('hide');
-            })
-            .catch(error => {
-                console.error('Erro ao atualizar cliente:', error);
-            });
-    }
-
-    function deleteCustomer(id) {
-        axios.delete(`/api/clientes/${id}`)
-            .then(() => {
-                clientes = clientes.filter(cliente => cliente.id !== id);
-                clientesFiltrados = clientesFiltrados.filter(cliente => cliente.id !== id);
-                updateCustomerTable();
-            })
-            .catch(error => {
-                console.error('Erro ao excluir cliente:', error);
-            });
-    }
-
-    // Event Listeners
-    document.getElementById('addHarvestForm').addEventListener('submit', addHarvest);
-    document.getElementById('addCustomerForm').addEventListener('submit', addCustomer);
-    document.getElementById('updateCustomerForm').addEventListener('submit', updateCustomer);
-
-    // Load initial data
-    loadHarvests();
+// Carrega os dados iniciais ao iniciar a aplicação
+loadHarvests();

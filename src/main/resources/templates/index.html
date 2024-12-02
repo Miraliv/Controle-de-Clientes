@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apiário Avoante</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-
 <!-- Navbar -->
 <nav class="navbar navbar-custom">
     <span class="navbar-brand mb-0 h1">Apiário Avoante</span>
@@ -20,17 +22,30 @@
 
 <!--  -->
 <div class="d-flex justify-content-between align-items-center mt-3">
+    <!-- Primeira seção: Adicionar Colheita e Selecionar Colheita -->
     <div>
         <button id="addHarvestButton" class="btn btn-primary" data-toggle="modal" data-target="#addHarvestModal">Adicionar Colheita</button>
         <div class="dropdown d-inline-block">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="harvestDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-info dropdown-toggle" type="button" id="harvestDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Selecionar Colheita
             </button>
             <div class="dropdown-menu" aria-labelledby="harvestDropdownButton" id="harvestDropdownMenu">
-                <!--  -->
+                <!-- Opções de colheita -->
             </div>
         </div>
+        <!-- Botão vermelho "Excluir" ao lado do dropdown "Selecionar Colheita" -->
+        <button type="button" class="btn btn-danger btn-sm d-inline-block ms-2" data-toggle="modal" data-target="#confirmDeleteHarvestModal">
+            <i class="bi bi-trash"></i>
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm d-inline-block ms-2" onclick="editHarvest()">
+            <i class="bi bi-pen"></i>
+        </button>
+
+
     </div>
+
+    <!-- Segunda seção: Adicionar Cliente e Filtrar Clientes -->
     <div class="d-inline-block">
         <button id="addCustomerButton" class="btn btn-success btn-isolated" disabled data-toggle="modal" data-target="#addCustomerModal">Adicionar Cliente</button>
         <div class="dropdown d-inline-block">
@@ -53,129 +68,29 @@
 <!--  -->
 <div id="tablesContent" class="mt-4"></div>
 
-<!--  -->
-<div class="modal fade" id="addHarvestModal" tabindex="-1" aria-labelledby="addHarvestModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="addHarvestForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addHarvestModalLabel">Adicionar Nova Colheita</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="harvestName">Nome da Colheita</label>
-                    <input type="text" class="form-control" id="harvestName" required>
-                </div>
-                <div class="form-group">
-                    <label for="harvestHoneyJars">Total de Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="harvestHoneyJars" required>
-                </div>
-                <div class="form-group">
-                    <label for="harvestHoneycombs">Total de Potes de Favo</label>
-                    <input type="number" class="form-control" id="harvestHoneycombs" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar Colheita</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Modal de adicionar colheita -->
+<div th:replace="modal_add_harvest :: modal"></div>
 
-<!--  -->
-<div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="addCustomerForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCustomerModalLabel">Adicionar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="customerName">Nome do Cliente</label>
-                    <input type="text" class="form-control" id="customerName" required>
-                </div>
-                <div class="form-group">
-                    <label for="customerPhone">Telefone</label>
-                    <input type="text" class="form-control" id="customerPhone" placeholder="(xx) xxxxx-xxxx" required>
-                </div>
-                <div class="form-group">
-                    <label for="customerSituacao">Situação</label>
-                    <select class="form-control" id="customerSituacao" required>
-                        <option value="Quer comprar">Quer comprar</option>
-                        <option value="Já pagou">Já pagou</option>
-                        <option value="Falta pagar">Falta pagar</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="customerHoneyJars">Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="customerHoneyJars" required>
-                </div>
-                <div class="form-group">
-                    <label for="customerHoneycombs">Potes de Favo</label>
-                    <input type="number" class="form-control" id="customerHoneycombs" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-success">Adicionar Cliente</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Modal de adicionar cliente -->
+<div th:replace="modal_add_Customer :: modal"></div>
 
-<!--  -->
-<div class="modal fade" id="updateCustomerModal" tabindex="-1" aria-labelledby="updateCustomerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="updateCustomerForm" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateCustomerModalLabel">Atualizar Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="updateCustomerIndex">
-                <div class="form-group">
-                    <label for="updateCustomerName">Nome do Cliente</label>
-                    <input type="text" class="form-control" id="updateCustomerName" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerPhone">Telefone</label>
-                    <input type="text" class="form-control" id="updateCustomerPhone" placeholder="(xx) xxxxx-xxxx" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerSituacao">Situação</label>
-                    <select class="form-control" id="updateCustomerSituacao" required>
-                        <option value="Quer comprar">Quer comprar</option>
-                        <option value="Já pagou">Já pagou</option>
-                        <option value="Falta pagar">Falta pagar</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerHoneyJars">Garrafas de Mel</label>
-                    <input type="number" class="form-control" id="updateCustomerHoneyJars" required>
-                </div>
-                <div class="form-group">
-                    <label for="updateCustomerHoneycombs">Potes de Favo</label>
-                    <input type="number" class="form-control" id="updateCustomerHoneycombs" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Modal de editar cliente -->
+<div th:replace="modal_update_Customer :: modal"></div>
 
-<script th:src="@{/js/script.js}"></script>
+<!-- Modal de editar colheita -->
+<div th:replace="modal_update_harvest :: modal"></div>
+
+<!-- Modal exclusão de colheita -->
+<div th:replace="modal_delete_harvest :: modal"></div>
+
+<!-- Modal de exclusão de cliente-->
+<div th:replace="modal_delete_Customer :: modal"></div>
+
+<!-- Dependências  -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+<script th:src="@{/js/script.js}"></script>
+<script th:src="@{/js/cliente.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
