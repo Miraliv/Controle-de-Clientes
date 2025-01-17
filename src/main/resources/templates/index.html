@@ -69,22 +69,22 @@
 <div id="tablesContent" class="mt-4"></div>
 
 <!-- Modal de adicionar colheita -->
-<div th:replace="modal_add_harvest :: modal"></div>
+<div th:replace="~{modal_add_harvest :: modal}"></div>
 
 <!-- Modal de adicionar cliente -->
-<div th:replace="modal_add_Customer :: modal"></div>
+<div th:replace="~{modal_add_Customer :: modal}"></div>
 
 <!-- Modal de editar cliente -->
-<div th:replace="modal_update_Customer :: modal"></div>
+<div th:replace="~{modal_update_Customer :: modal}"></div>
 
 <!-- Modal de editar colheita -->
-<div th:replace="modal_update_harvest :: modal"></div>
+<div th:replace="~{modal_update_harvest :: modal}"></div>
 
 <!-- Modal exclusão de colheita -->
-<div th:replace="modal_delete_harvest :: modal"></div>
+<div th:replace="~{modal_delete_harvest :: modal}"></div>
 
 <!-- Modal de exclusão de cliente-->
-<div th:replace="modal_delete_Customer :: modal"></div>
+<div th:replace="~{modal_delete_Customer :: modal}"></div>
 
 <!-- Dependências  -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
