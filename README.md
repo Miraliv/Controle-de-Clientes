@@ -12,10 +12,6 @@
 - JavaScript
 - jQuery
 
-## Time de Desenvolvedores
-
-- Kauã Vilarim
-
 ## Objetivo do Software
 
 O sistema tem como objetivo facilitar a gestão de clientes para um apiário. O software permite registrar e gerenciar colheitas de mel e favos de mel, bem como monitorar as vendas e status de pagamento dos clientes.
