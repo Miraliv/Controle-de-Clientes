@@ -51,7 +51,7 @@ public class ApiarioService {
         clienteExistente.setSituacao(attCliente.getSituacao());
         clienteExistente.setGarrafasMel(attCliente.getGarrafasMel());
         clienteExistente.setPotesFavo(attCliente.getPotesFavo());
-        // Colheita não deve ser modificada, então mantemos a existente
+
         if (attCliente.getColheita() != null) {
             Colheita colheita = colheitaRepository.findById(attCliente.getColheita().getId())
                     .orElseThrow(() -> new EntityNotFoundException("Colheita não encontrada"));
