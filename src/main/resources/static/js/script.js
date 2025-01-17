@@ -40,14 +40,27 @@ function selectHarvest(colheita) {
     loadCustomers(colheita.id);
 
     $('#harvestData').html(`
-        <h5>Detalhes da Colheita</h5>
-        <p>Baldes de mel: ${colheita.baldesMel}</p>
-        <p>Garrafas de Mel: ${colheita.totalGarrafasMel}</p>
-        <p>Potes de Favo: ${colheita.totalPotesFavo}</p>
+        <div class="card border border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Detalhes da Colheita</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Baldes de mel:</strong> ${colheita.baldesMel}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Garrafas de Mel:</strong> ${colheita.totalGarrafasMel}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Potes de Favo:</strong> ${colheita.totalPotesFavo}
+                    </li>
+                </ul>
+            </div>
+        </div>
     `);
+
 }
-
-
 // Adiciona uma nova colheita através de uma solicitação POST
 function addHarvest(event) {
     event.preventDefault();
