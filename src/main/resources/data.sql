@@ -1,4 +1,7 @@
 
+DELETE FROM cliente;
+
+
 INSERT IGNORE INTO cliente (nome, garrafas_mel, potes_favo, situacao, telefone, colheita_id)
 VALUES
     ('Nilda', 1, 0, 'Quer comprar', '(99) 9999-9999', 2),
