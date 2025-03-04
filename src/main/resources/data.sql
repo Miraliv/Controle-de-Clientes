@@ -1,3 +1,9 @@
+
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+
+
 INSERT IGNORE INTO cliente (nome, garrafas_mel, potes_favo, situacao, telefone, colheita_id)
 VALUES
     ('Nilda', 1, 0, 'Quer comprar', '(99) 9999-9999', 2),
