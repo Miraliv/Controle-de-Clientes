@@ -34,7 +34,7 @@ function updateCustomerTable() {
         return;
     }
 
-    const table = $('<table>').addClass('table table-striped');
+    const table = $('<table>').addClass('table table-striped table-hover');
     const thead = $('<thead>').html(`
         <tr>
             <th>Nome</th>
