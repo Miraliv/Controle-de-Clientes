@@ -89,69 +89,14 @@ $(document).ready(function(){
     $('#updateCustomerPhone').inputmask('(99) 99999-9999');
 });
 
-
-function editHarvest() {
-    if (!selectedHarvest) {
-        console.error("Nenhuma colheita foi selecionada para edição.");
-        return;
-    }
-
-    // Verifique se o jQuery está encontrando os campos
-    console.log($('#harvestName')); // Verifica se o elemento está sendo selecionado corretamente
-    console.log($('#harvestHoneyBucket'));
-    console.log($('#harvestHoneyJars'));
-    console.log($('#harvestHoneycombs'));
-
-    // Preenche os campos do modal com os dados da colheita selecionada
-    $('#harvestName').val(selectedHarvest.nome || '');
-    $('#harvestHoneyBucket').val(selectedHarvest.baldesMel !== undefined ? selectedHarvest.baldesMel : '');
-    $('#harvestHoneyJars').val(selectedHarvest.totalGarrafasMel !== undefined ? selectedHarvest.totalGarrafasMel : '');
-    $('#harvestHoneycombs').val(selectedHarvest.totalPotesFavo !== undefined ? selectedHarvest.totalPotesFavo : '');
-
-    // Abre o modal após os dados estarem prontos
+function editHarvest(){
+   console.log(`${selectedHarvest.colheita.id}`);
+    $('#updateHarvestName').val(selectedHarvest.nome);
+    $('#updateHarvestHoneyBucket').val(selectedHarvest.baldesMel);
+    $('#updateHarvestHoneyJars').val(selectedHarvest.totalGarrafasMel);
+    $('#updateHarvestHoneycombs').val(selectedHarvest.totalPotesFavo);
     $('#updateHarvestModal').modal('show');
-}
-
-
-$('#updateHarvestForm').on('submit', function(event) {
-    event.preventDefault(); // Impede o comportamento padrão de submissão do formulário
-
-    updateHarvest(); // Chama a função que faz o envio via Axios
-});
-
-function updateHarvest() {
-    const nome = $('#harvestName').val();
-    const baldesMel = parseInt($('#harvestHoneyBucket').val());
-    const totalGarrafasMel = parseInt($('#harvestHoneyJars').val());
-    const totalPotesFavo = parseInt($('#harvestHoneycombs').val());
-
-    if (!selectedHarvest) {
-        console.error("Nenhuma colheita selecionada para atualização.");
-        return;
     }
-
-    selectedHarvest.nome = nome;
-    selectedHarvest.baldesMel = baldesMel;
-    selectedHarvest.totalGarrafasMel = totalGarrafasMel;
-    selectedHarvest.totalPotesFavo = totalPotesFavo;
-
-    axios.put(`/api/colheitas/${selectedHarvest.id}`, selectedHarvest)
-        .then(response => {
-            // Atualize os dados da colheita
-            selectedHarvest = response.data;
-
-            // Atualize os detalhes na tela
-            $('#harvestNameTitle').text(selectedHarvest.nome);
-            $('#updateHarvestModal').modal('hide');
-
-            // Você pode atualizar a interface ou recarregar a lista de colheitas aqui
-        })
-        .catch(error => {
-            console.error("Erro ao atualizar colheita:", error);
-        });
-}
-
-
 function deleteSelectedHarvest() {
     if (selectedHarvest) {
         axios.delete(`/api/colheitas/${selectedHarvest.id}`)
