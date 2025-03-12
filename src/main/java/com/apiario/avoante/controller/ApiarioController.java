@@ -122,7 +122,7 @@ public class ApiarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/api/colheitas/{id}")
+    @PutMapping("/colheitas/{id}")
     public ResponseEntity<Colheita> atualizarColheita(@PathVariable Long id, @RequestBody Colheita colheita) {
         Optional<Colheita> colheitaAtualizada = apiarioService.atualizarColheita(id, colheita);
 
