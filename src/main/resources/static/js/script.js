@@ -90,13 +90,57 @@ $(document).ready(function(){
 });
 
 function editHarvest(){
-   console.log(`${selectedHarvest.colheita.id}`);
-    $('#updateHarvestName').val(selectedHarvest.nome);
-    $('#updateHarvestHoneyBucket').val(selectedHarvest.baldesMel);
-    $('#updateHarvestHoneyJars').val(selectedHarvest.totalGarrafasMel);
-    $('#updateHarvestHoneycombs').val(selectedHarvest.totalPotesFavo);
-    $('#updateHarvestModal').modal('show');
+
+console.log("selectedHarvest:", selectedHarvest); // Verifica se os dados existem
+    if (!selectedHarvest) {
+        console.error("Nenhuma colheita selecionada!");
+        return;
+
     }
+
+    $('#updateharvestName').val(selectedHarvest.nome);
+    $('#updateharvestHoneyBucket').val(selectedHarvest.baldesMel);
+    $('#updateharvestHoneyJars').val(selectedHarvest.totalGarrafasMel);
+    $('#updateharvestHoneycombs').val(selectedHarvest.totalPotesFavo);
+    $('#updateHarvestModal').modal('show');
+
+    }
+
+    $('#updateHarvestForm').submit(function (event) {
+        event.preventDefault(); // Evita o recarregamento da página
+
+        // Criando objeto com os dados atualizados
+        const updatedHarvest = {
+            id: selectedHarvest.id, // Pegamos o ID da colheita
+            nome: $('#updateharvestName').val(),
+            baldesMel: $('#updateharvestHoneyBucket').val(),
+            totalGarrafasMel: $('#updateharvestHoneyJars').val(),
+            totalPotesFavo: $('#updateharvestHoneycombs').val()
+        };
+
+        console.log("Enviando para o back-end:", updatedHarvest); // Verificação
+
+        // Enviando via Axios (substitua pela URL correta da sua API)
+        axios.put(`/api/colheitas/${selectedHarvest.id}`, updatedHarvest)
+            .then(response => {
+                console.log("Colheita atualizada com sucesso!", response.data);
+
+                // Atualizar os dados no frontend, se necessário
+                const index = colheitas.findIndex(h => h.id === selectedHarvest.id);
+                if (index !== -1) {
+                    colheitas[index] = response.data;
+                }
+
+                // Fechar modal e limpar formulário
+                $('#updateHarvestModal').modal('hide');
+                $('#updateHarvestForm')[0].reset();
+            })
+            .catch(error => {
+                console.error("Erro ao atualizar colheita:", error);
+            });
+    });
+
+
 function deleteSelectedHarvest() {
     if (selectedHarvest) {
         axios.delete(`/api/colheitas/${selectedHarvest.id}`)
